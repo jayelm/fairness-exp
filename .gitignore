@@ -2,5 +2,5 @@
 __pycache__
 models/*
 !models/README.md
-analysis/*
-!analysis/README.md
+.Rproj.user
+*.nb.html

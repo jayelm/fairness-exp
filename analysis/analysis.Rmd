@@ -1,0 +1,18 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r setup}
+library(tidyverse)
+library(cowplot)
+```
+
+```{r}
+neurons <- read_csv('neurons.csv')
+View(neurons)
+```
+
+
+
+
