@@ -161,35 +161,6 @@ def names(features):
     return out
 
 
-def compute_features(base_names, base_masks, max_length):
-    names = base_names[:]
-    masks = [base_masks[:, i] for i in range(len(names))]
-
-    for i in range(max_length - 1):
-        masks_to_add = []
-        names_to_add = []
-
-        for name, mask in zip(names, masks):
-            for j, name_to_add in enumerate(base_names):
-                if name_to_add == name:
-                    continue
-                mask_to_add = base_masks[:, j]
-                disj_mask = mask | mask_to_add
-                disj_name = f"({name}) OR ({name_to_add})"
-
-                conj_mask = mask & mask_to_add
-                conj_name = f"({name}) AND ({name_to_add})"
-
-                masks_to_add.append(disj_mask)
-                names_to_add.append(disj_name)
-
-        names.extend(names_to_add)
-        masks.extend(masks_to_add)
-
-    masks = np.stack(masks, axis=1)
-    return names, masks
-
-
 def mask_threshold(feats, threshold):
     thresholds = np.quantile(feats, 1 - threshold, axis=0, keepdims=True)
     return feats > thresholds
@@ -205,9 +176,6 @@ def analyze(args):
     feature_names = names(features)
     #  feature_masks = mask_threshold(ref_xs, args.feature_threshold)
     feature_masks = ref_xs > 0
-    feature_names, feature_masks = compute_features(
-        feature_names, feature_masks, args.max_formula_length
-    )
 
     loader = DataLoader(list(zip(ref_xs_hidden, ref_ys)), batch_size=args.batch_size)
 
@@ -273,7 +241,7 @@ def iou(a, b):
 
 
 def search_iou(neuron_mask, feature_masks, max_formula_length=2, beam_size=10,
-               complexity_penalty=0.99):
+               complexity_penalty=1):
     """
     Search for best IoU with beam search
     """
