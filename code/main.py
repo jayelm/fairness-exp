@@ -3,6 +3,7 @@ Fairness experiments
 """
 
 import os
+from collections import Counter
 
 import numpy as np
 import pandas as pd
@@ -11,6 +12,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from tqdm import trange
+import formula as F
 
 
 class MLP(nn.Module):
@@ -238,34 +240,100 @@ def analyze(args):
         feature_masks,
         feature_names,
         final_weight,
+        args
     )
 
 
-def explain(neurons, neuron_masks, feature_masks, feature_names, final_weight):
+def get_mask(masks, f):
+    """
+    Serializable/global version of get_mask for multiprocessing
+    """
+    # TODO: Handle here when doing AND and ORs of scenes vs scalars.
+    if isinstance(f, F.And):
+        masks_l = get_mask(masks, f.left)
+        masks_r = get_mask(masks, f.right)
+        return masks_l & masks_r
+    elif isinstance(f, F.Or):
+        masks_l = get_mask(masks, f.left)
+        masks_r = get_mask(masks, f.right)
+        return masks_l | masks_r
+    elif isinstance(f, F.Not):
+        masks_val = get_mask(masks, f.val)
+        return 1 - masks_val
+    elif isinstance(f, F.Leaf):
+        return masks[:, f.val]
+    else:
+        raise ValueError("Most be passed formula")
+
+
+def iou(a, b):
+    intersection = (a & b).sum()
+    union = (a | b).sum()
+    return intersection / (union + 1e-10)
+
+
+def search_iou(neuron_mask, feature_masks, max_formula_length=2, beam_size=10,
+               complexity_penalty=0.99):
+    """
+    Search for best IoU with beam search
+    """
+    ious = {}
+    for feat in range(feature_masks.shape[1]):
+        feat_f = F.Leaf(feat)
+        mask = get_mask(feature_masks, feat_f)
+
+        ious[feat] = iou(neuron_mask, mask)
+
+    ious = Counter(ious)
+    formulas = {F.Leaf(feat): iou for feat, iou in ious.most_common(beam_size)}
+    best_noncomp = Counter(formulas).most_common(1)[0]
+
+    for i in range(args.max_formula_length - 1):
+        new_formulas = {}
+        for formula in formulas:
+            for feat in ious.keys():
+                for op, negate in [(F.Or, False), (F.And, False), (F.And, True)]:
+                    new_term = F.Leaf(feat)
+                    if negate:
+                        new_term = F.Not(new_term)
+                    new_term = op(formula, new_term)
+                    masks_comp = get_mask(feature_masks, new_term)
+
+                    comp_iou = iou(neuron_mask, masks_comp)
+                    comp_iou = (complexity_penalty ** (len(new_term) - 1)) * comp_iou
+
+                    new_formulas[new_term] = comp_iou
+
+        formulas.update(new_formulas)
+        # Trim the beam
+        formulas = dict(Counter(formulas).most_common(beam_size))
+
+    best = Counter(formulas).most_common(1)[0]
+
+    return best, best_noncomp
+
+
+def explain(neurons, neuron_masks, feature_masks, feature_names, final_weight, args):
     records = []
     for i_neuron in neurons:
         neuron_mask = neuron_masks[:, i_neuron]
-        intersection = (feature_masks & neuron_mask[:, np.newaxis]).sum(axis=0)
-        union = (feature_masks | neuron_mask[:, np.newaxis]).sum(axis=0)
-
-        iou = intersection / union
-        best = np.argmax(iou)
-
-        if feature_masks[:, best].mean() in {0, 1}:
-            continue
+        best, _ = search_iou(neuron_mask, feature_masks, max_formula_length=args.max_formula_length,
+                             beam_size=args.beam_size)
+        best_lab, best_iou = best
+        best_name = best_lab.to_str(lambda x: feature_names[x])
 
         # Compute final weight
         weight = final_weight[0, i_neuron]
         records.append(
             {
                 "neuron": i_neuron,
-                "feature": feature_names[best],
-                "iou": iou[best],
+                "feature": best_name,
+                "iou": best_iou,
                 "weight": weight,
             }
         )
         print(
-            f"neuron {i_neuron:03d}: feature {feature_names[best]} (iou {iou[best]:.3f}, weight {weight:.3f})"
+            f"neuron {i_neuron:03d}: feature {best_name} (iou {best_iou:.3f}, weight {weight:.3f})"
         )
 
     return pd.DataFrame(records)
@@ -282,6 +350,7 @@ if __name__ == "__main__":
     parser.add_argument("--n_hidden", default=64, type=int)
     parser.add_argument("--epochs", default=10, type=int)
     parser.add_argument("--batch_size", default=100, type=int)
+    parser.add_argument("--beam_size", default=10, type=int)
     parser.add_argument("--n_explain", default=2000, type=int)
     parser.add_argument("--neuron_threshold", default=0.5, type=float)
     parser.add_argument("--feature_threshold", default=0.5, type=float)
