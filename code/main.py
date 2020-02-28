@@ -208,7 +208,7 @@ def analyze(args):
         feature_masks,
         feature_names,
         final_weight,
-        args
+        args,
     )
 
 
@@ -240,8 +240,9 @@ def iou(a, b):
     return intersection / (union + 1e-10)
 
 
-def search_iou(neuron_mask, feature_masks, max_formula_length=2, beam_size=10,
-               complexity_penalty=1):
+def search_iou(
+    neuron_mask, feature_masks, max_formula_length=2, beam_size=10, complexity_penalty=1
+):
     """
     Search for best IoU with beam search
     """
@@ -285,8 +286,12 @@ def explain(neurons, neuron_masks, feature_masks, feature_names, final_weight, a
     records = []
     for i_neuron in neurons:
         neuron_mask = neuron_masks[:, i_neuron]
-        best, _ = search_iou(neuron_mask, feature_masks, max_formula_length=args.max_formula_length,
-                             beam_size=args.beam_size)
+        best, _ = search_iou(
+            neuron_mask,
+            feature_masks,
+            max_formula_length=args.max_formula_length,
+            beam_size=args.beam_size,
+        )
         best_lab, best_iou = best
         best_name = best_lab.to_str(lambda x: feature_names[x])
 
