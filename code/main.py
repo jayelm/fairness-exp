@@ -202,7 +202,7 @@ def analyze(args):
     neuron_masks = mask_threshold(neuron_acts, args.neuron_threshold)
 
     final_weight = model.l2.weight.detach().numpy()
-    return explain(
+    comp_df, prim_df = explain(
         list(range(args.n_hidden)),
         neuron_masks,
         feature_masks,
@@ -210,6 +210,9 @@ def analyze(args):
         final_weight,
         args,
     )
+    os.makedirs(os.path.split(args.save_analysis)[0], exist_ok=True)
+    comp_df.to_csv(args.save_analysis, index=False)
+    prim_df.to_csv(args.save_analysis.replace('.csv', '_prim.csv'), index=False)
 
 
 def get_mask(masks, f):
@@ -284,6 +287,7 @@ def search_iou(
 
 def explain(neurons, neuron_masks, feature_masks, feature_names, final_weight, args):
     records = []
+    primitives = []
     for i_neuron in neurons:
         neuron_mask = neuron_masks[:, i_neuron]
         best, _ = search_iou(
@@ -305,11 +309,26 @@ def explain(neurons, neuron_masks, feature_masks, feature_names, final_weight, a
                 "weight": weight,
             }
         )
+
+        # Primitives
+        for prim in best_lab.get_vals():
+            prim_name = feature_names[prim]
+            primitives.append(
+                {
+                    "neuron": i_neuron,
+                    "primitive": prim_name,
+                    "iou": best_iou,
+                    "weight": weight,
+                }
+            )
+
         print(
             f"neuron {i_neuron:03d}: feature {best_name} (iou {best_iou:.3f}, weight {weight:.3f})"
         )
 
-    return pd.DataFrame(records)
+    record_df = pd.DataFrame(records)
+    primitive_df = pd.DataFrame(primitives)
+    return record_df, primitive_df
 
 
 if __name__ == "__main__":
@@ -329,15 +348,16 @@ if __name__ == "__main__":
     parser.add_argument("--feature_threshold", default=0.5, type=float)
     parser.add_argument("--max_formula_length", default=2, type=int)
     parser.add_argument("--save_model", default="models/model.pt")
-    parser.add_argument("--save_analysis", default="analysis/neurons.csv")
+    parser.add_argument("--save_analysis", default="analysis/data/neurons.csv")
     parser.add_argument("--train_data", default="data/train.csv")
     parser.add_argument("--test_data", default="data/test.csv")
 
     args = parser.parse_args()
 
+    if not args.save_analysis.endswith('.csv'):
+        parser.error('--save_analysis must end with .csv')
+
     if args.mode == "train":
         train(args)
     elif args.mode == "analyze":
-        df = analyze(args)
-        os.makedirs(os.path.split(args.save_analysis)[0], exist_ok=True)
-        df.to_csv(args.save_analysis, index=False)
+        analyze(args)
