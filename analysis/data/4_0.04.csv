@@ -1,0 +1,65 @@
+neuron,feature,iou,weight
+0,(((education:Doctorate OR native-country:China) OR native-country:Italy) OR native-country:South),0.25806451612875475,-0.0049882386811077595
+1,(((education:Prof-school OR native-country:Canada) OR native-country:England) OR native-country:Italy),0.4999999999994186,0.21765339374542236
+2,(((race:Asian-Pac-Islander OR native-country:Germany) OR native-country:Portugal) OR occupation:Priv-house-serv),0.2892561983468684,-0.08930757641792297
+3,(((education:7th-8th OR education:5th-6th) OR native-country:England) OR native-country:Canada),0.24137931034461949,-0.11978779733181
+4,(((education:11th OR occupation:Protective-serv) AND (NOT marital-status:Married-civ-spouse)) OR education:1st-4th),0.27131782945715405,-0.19615833461284637
+5,(((capital-loss AND relationship:Husband) OR native-country:Germany) OR native-country:China),0.31531531531503126,0.12209059298038483
+6,(((education:Doctorate OR native-country:Canada) OR native-country:England) OR native-country:Jamaica),0.4512195121945717,0.0522625669836998
+7,(((education:9th OR education:12th) OR native-country:Puerto-Rico) OR native-country:Iran),0.24999999999976852,-0.19312791526317596
+8,(((education:Prof-school OR education:Doctorate) OR native-country:Japan) OR native-country:Poland),0.6547619047611253,0.21826353669166565
+9,(((education:10th OR education:1st-4th) AND (NOT marital-status:Married-civ-spouse)) OR native-country:El-Salvador),0.311827956988912,-0.14889200031757355
+10,(((workclass:Self-emp-not-inc AND (NOT marital-status:Married-civ-spouse)) OR native-country:Puerto-Rico) OR native-country:Dominican-Republic),0.2612612612610259,-0.1434612274169922
+11,(((workclass:Self-emp-inc OR occupation:Protective-serv) AND marital-status:Married-civ-spouse) OR native-country:Jamaica),0.33333333333307497,0.16465610265731812
+12,(((education:7th-8th OR native-country:Iran) OR native-country:El-Salvador) OR native-country:Jamaica),0.34042553191453145,-0.11282118409872055
+13,(((workclass:? AND (NOT education:Some-college)) OR native-country:England) OR native-country:Italy),0.31386861313845704,0.027017025277018547
+14,(((marital-status:Never-married AND (NOT native-country:United-States)) OR education:1st-4th) OR native-country:Puerto-Rico),0.3364485981305267,-0.20672190189361572
+15,(((native-country:Canada OR native-country:India) OR native-country:Germany) OR native-country:Iran),0.304878048780116,0.11260021477937698
+16,(((education:7th-8th OR education:1st-4th) OR education:12th) AND (NOT relationship:Husband)),0.26136363636333937,-0.1932283639907837
+17,(((education:1st-4th OR native-country:Philippines) OR education:5th-6th) OR native-country:England),0.33695652173876417,-0.21250726282596588
+18,(((marital-status:Widowed OR education:12th) OR education:10th) AND (NOT relationship:Husband)),0.263157894736669,-0.1476495862007141
+19,(((education:5th-6th OR native-country:China) OR education:12th) OR native-country:Poland),0.27835051546363054,-0.06931068003177643
+20,(((education:Doctorate OR occupation:Protective-serv) OR native-country:Canada) OR native-country:China),0.3783783783780375,0.15775318443775177
+21,(((capital-loss OR occupation:Tech-support) AND education-num) OR native-country:Iran),0.25954198473262635,0.2285842001438141
+22,(((education:7th-8th OR education:1st-4th) OR native-country:El-Salvador) OR native-country:Canada),0.3106796116501838,-0.1779078245162964
+23,(((education:10th AND marital-status:Never-married) OR education:7th-8th) OR occupation:Priv-house-serv),0.3495145631064568,-0.2158127725124359
+24,(((occupation:Exec-managerial AND education-num) AND (NOT marital-status:Never-married)) OR native-country:Jamaica),0.2876712328765153,0.06438713520765305
+25,(((education:Prof-school OR native-country:Canada) OR native-country:Poland) OR native-country:Cambodia),0.4999999999993902,0.14095857739448547
+26,(((capital-gain AND education:Bachelors) OR native-country:Italy) OR native-country:Germany),0.24999999999976852,0.1725473403930664
+27,(((education:Doctorate OR education:Masters) AND occupation:Prof-specialty) OR native-country:Cuba),0.330578512396421,0.13323935866355896
+28,(((marital-status:Never-married AND (NOT native-country:United-States)) OR education:9th) OR native-country:China),0.2983870967739529,-0.23160262405872345
+29,(((education:10th OR education:9th) AND (NOT marital-status:Married-civ-spouse)) OR native-country:Puerto-Rico),0.2857142857140136,-0.1641210913658142
+30,(((native-country:? OR native-country:Italy) OR native-country:Jamaica) OR native-country:Portugal),0.303921568627153,0.1859022080898285
+31,(((education:Prof-school OR native-country:Iran) OR native-country:Japan) OR native-country:Cuba),0.373626373625963,0.13250447809696198
+32,(((workclass:Federal-gov OR native-country:England) OR native-country:India) OR native-country:Iran),0.2695652173910699,0.20843960344791412
+33,(((capital-gain AND education-num) OR education:Doctorate) OR native-country:Poland),0.37037037037009607,0.1530311405658722
+34,(((education:7th-8th OR education:5th-6th) OR native-country:Dominican-Republic) OR native-country:Poland),0.25454545454522315,-0.10359474271535873
+35,(((native-country:? OR native-country:China) OR native-country:Iran) OR native-country:Japan),0.38775510204042063,-0.17044857144355774
+36,(((education:10th OR native-country:Philippines) OR occupation:Priv-house-serv) OR native-country:Iran),0.24409448818878418,-0.1998574286699295
+37,(((capital-gain AND education-num) OR race:Asian-Pac-Islander) OR education:Doctorate),0.3371428571426645,0.15236444771289825
+38,(((education:7th-8th OR education:9th) OR native-country:Philippines) OR native-country:Puerto-Rico),0.31355932203363257,-0.07543759793043137
+39,(((capital-gain AND education-num) OR native-country:India) OR native-country:Puerto-Rico),0.3409090909088327,0.144889235496521
+40,(((marital-status:Married-spouse-absent OR education:1st-4th) OR native-country:Italy) OR native-country:Japan),0.3092783505151451,-0.13646560907363892
+41,(((education:7th-8th OR education:1st-4th) OR native-country:Iran) OR occupation:Protective-serv),0.2615384615382604,-0.25876978039741516
+42,(((sex:Female AND (NOT native-country:United-States)) OR native-country:Canada) OR native-country:Portugal),0.2844827586204444,-0.1444215178489685
+43,(((marital-status:Never-married AND (NOT native-country:United-States)) OR native-country:India) OR marital-status:Married-AF-spouse),0.23853211009152428,-0.22290053963661194
+44,(((education:9th OR education:1st-4th) OR workclass:State-gov) AND (NOT education-num)),0.2539682539680524,-0.1455630511045456
+45,(((education:7th-8th OR relationship:Other-relative) OR native-country:Germany) OR native-country:El-Salvador),0.33064516129005594,-0.13101188838481903
+46,(((workclass:? AND relationship:Own-child) OR native-country:Iran) OR native-country:Haiti),0.3956043956039609,-0.10598361492156982
+47,(((occupation:Other-service AND (NOT native-country:United-States)) OR native-country:Italy) OR native-country:China),0.25242718446577433,-0.2050807923078537
+48,(((workclass:Self-emp-inc OR native-country:Italy) OR native-country:Iran) OR education:12th),0.39393939393909555,0.20373183488845825
+49,(((education:9th OR marital-status:Married-spouse-absent) OR native-country:China) OR native-country:England),0.3809523809520181,-0.1455501914024353
+50,(((education:Doctorate OR native-country:Italy) OR native-country:Dominican-Republic) OR native-country:South),0.352941176470173,0.1731874793767929
+51,(((education:Doctorate OR native-country:England) OR native-country:India) OR native-country:Japan),0.47499999999940623,0.1660042107105255
+52,(((native-country:Philippines OR native-country:Germany) OR native-country:China) OR native-country:Italy),0.37499999999953126,0.2181507796049118
+53,(((education:11th AND relationship:Own-child) OR native-country:Dominican-Republic) OR native-country:Poland),0.2631578947365651,-0.1768694818019867
+54,(((native-country:Canada OR native-country:Italy) OR native-country:Portugal) OR native-country:Haiti),0.2624999999996719,0.1366855800151825
+55,(((relationship:Own-child OR education:9th) AND occupation:Other-service) OR native-country:Portugal),0.25438596491205756,-0.21611741185188293
+56,(((fnlwgt AND (NOT native-country:United-States)) OR education:9th) AND (NOT education-num)),0.35658914728654534,-0.10460914671421051
+57,(((native-country:Mexico OR marital-status:Widowed) AND (NOT relationship:Not-in-family)) OR native-country:China),0.3423423423420339,-0.21707075834274292
+58,(((education:Masters AND marital-status:Married-civ-spouse) OR native-country:Germany) OR native-country:China),0.3644067796607081,0.0773467943072319
+59,(((race:Asian-Pac-Islander AND (NOT native-country:United-States)) OR workclass:Federal-gov) OR native-country:Haiti),0.325757575757329,0.2335463911294937
+60,(((native-country:? OR native-country:China) OR education:Doctorate) OR native-country:Germany),0.3660714285711017,0.17240352928638458
+61,(((education:7th-8th OR education:5th-6th) OR native-country:China) OR native-country:Jamaica),0.23893805309713367,-0.1826837658882141
+62,(((relationship:Own-child AND education:Bachelors) OR occupation:Priv-house-serv) OR native-country:Japan),0.28999999999971,-0.06194860115647316
+63,(((education:Assoc-acdm OR native-country:Canada) OR native-country:India) OR education:Prof-school),0.3013698630134922,0.20041801035404205

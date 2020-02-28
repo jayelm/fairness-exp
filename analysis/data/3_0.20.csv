@@ -1,0 +1,65 @@
+neuron,feature,iou,weight
+0,((marital-status:Divorced OR occupation:Handlers-cleaners) OR occupation:Protective-serv),0.34079173838204113,-0.0049882386811077595
+1,((education-num OR relationship:Wife) AND marital-status:Married-civ-spouse),0.46486486486478107,0.21765339374542236
+2,((relationship:Own-child OR occupation:Transport-moving) OR capital-loss),0.3694968553458538,-0.08930757641792297
+3,((education:11th OR education:10th) OR marital-status:Widowed),0.34684684684676875,-0.11978779733181
+4,((marital-status:Never-married AND (NOT education-num)) OR marital-status:Widowed),0.4345794392522687,-0.19615833461284637
+5,((relationship:Husband AND (NOT occupation:Sales)) AND (NOT occupation:Adm-clerical)),0.4577656675748695,0.12209059298038483
+6,((education:Masters OR workclass:?) OR workclass:State-gov),0.44536082474217625,0.0522625669836998
+7,((marital-status:Never-married AND (NOT occupation:Adm-clerical)) AND (NOT workclass:Local-gov)),0.3701015965166371,-0.19312791526317596
+8,((education-num AND (NOT education:Bachelors)) OR relationship:Wife),0.40669014084499877,0.21826353669166565
+9,((relationship:Own-child OR workclass:Self-emp-not-inc) OR education:10th),0.38155802861679144,-0.14889200031757355
+10,((workclass:Private AND (NOT marital-status:Married-civ-spouse)) AND (NOT age)),0.39673105497765276,-0.1434612274169922
+11,((relationship:Husband AND (NOT education:HS-grad)) OR occupation:Protective-serv),0.4462934947049249,0.16465610265731812
+12,((marital-status:Divorced OR relationship:Own-child) OR occupation:Handlers-cleaners),0.43586005830897434,-0.11282118409872055
+13,((education-num OR workclass:?) AND (NOT relationship:Own-child)),0.39999999999994734,0.027017025277018547
+14,((relationship:Own-child OR native-country:?) OR marital-status:Married-spouse-absent),0.4307692307691479,-0.20672190189361572
+15,((occupation:Craft-repair OR capital-gain) OR native-country:?),0.35845896147397677,0.11260021477937698
+16,((education:HS-grad AND (NOT marital-status:Married-civ-spouse)) OR marital-status:Divorced),0.409436834094306,-0.1932283639907837
+17,((relationship:Unmarried OR workclass:?) OR native-country:Mexico),0.36948529411757913,-0.21250726282596588
+18,((sex:Female OR relationship:Own-child) AND (NOT education:Some-college)),0.3658536585365358,-0.1476495862007141
+19,((occupation:Other-service OR education:10th) OR education:11th),0.31884057971008717,-0.06931068003177643
+20,((marital-status:Married-civ-spouse OR marital-status:Separated) AND (NOT occupation:Machine-op-inspct)),0.2768031189083551,0.15775318443775177
+21,((education:Bachelors OR capital-loss) OR education:Assoc-voc),0.451768488745908,0.2285842001438141
+22,((marital-status:Divorced OR workclass:?) OR education:11th),0.3839869281045124,-0.1779078245162964
+23,((marital-status:Never-married AND (NOT relationship:Not-in-family)) OR education:7th-8th),0.5019685039369091,-0.2158127725124359
+24,((occupation:Exec-managerial OR workclass:Self-emp-not-inc) OR education:Masters),0.5439560439559443,0.06438713520765305
+25,((education:Bachelors OR workclass:Self-emp-not-inc) AND marital-status:Married-civ-spouse),0.4700665188469024,0.14095857739448547
+26,((marital-status:Married-civ-spouse AND workclass:Private) OR workclass:Federal-gov),0.4053691275167241,0.1725473403930664
+27,((education-num AND (NOT education:Bachelors)) OR workclass:Local-gov),0.4188034188033472,0.13323935866355896
+28,((marital-status:Never-married AND (NOT relationship:Not-in-family)) OR occupation:Other-service),0.42625607779571695,-0.23160262405872345
+29,((marital-status:Never-married AND (NOT education:Some-college)) OR marital-status:Separated),0.3746268656715859,-0.1641210913658142
+30,((marital-status:Married-civ-spouse AND (NOT education:Bachelors)) AND (NOT occupation:Machine-op-inspct)),0.40926640926635655,0.1859022080898285
+31,((occupation:Prof-specialty OR workclass:Self-emp-inc) OR workclass:Self-emp-not-inc),0.43193277310917105,0.13250447809696198
+32,((relationship:Husband AND (NOT occupation:Transport-moving)) OR workclass:Federal-gov),0.33938706015887177,0.20843960344791412
+33,((education-num OR relationship:Wife) AND marital-status:Married-civ-spouse),0.4972375690606819,0.1530311405658722
+34,((occupation:Other-service OR occupation:Handlers-cleaners) OR education:11th),0.36297640653350943,-0.10359474271535873
+35,((relationship:Own-child OR occupation:Craft-repair) OR occupation:Farming-fishing),0.32590529247906325,-0.17044857144355774
+36,((occupation:Other-service OR education:10th) OR workclass:Local-gov),0.2911184210525837,-0.1998574286699295
+37,((relationship:Husband AND education-num) OR capital-gain),0.4165202108962361,0.15236444771289825
+38,((occupation:Other-service OR workclass:?) OR occupation:Handlers-cleaners),0.3209076175039998,-0.07543759793043137
+39,((relationship:Husband AND (NOT education:HS-grad)) AND (NOT occupation:Craft-repair)),0.4401349072511905,0.144889235496521
+40,((relationship:Own-child OR marital-status:Divorced) OR marital-status:Separated),0.35961272475790323,-0.13646560907363892
+41,((workclass:? OR workclass:Local-gov) OR education:10th),0.3486590038313508,-0.25876978039741516
+42,((relationship:Wife OR workclass:Self-emp-not-inc) OR education:11th),0.31956912028719575,-0.1444215178489685
+43,((education:Some-college OR education:Assoc-voc) AND (NOT marital-status:Married-civ-spouse)),0.3474088291745974,-0.22290053963661194
+44,((native-country:United-States AND (NOT marital-status:Married-civ-spouse)) AND (NOT education-num)),0.3169856459329764,-0.1455630511045456
+45,((workclass:? OR occupation:Handlers-cleaners) OR occupation:Adm-clerical),0.3398692810456961,-0.13101188838481903
+46,((relationship:Own-child OR occupation:Farming-fishing) OR workclass:?),0.37563451776643386,-0.10598361492156982
+47,((occupation:Other-service OR occupation:Handlers-cleaners) OR occupation:Farming-fishing),0.387337057728047,-0.2050807923078537
+48,((education:Bachelors OR workclass:Self-emp-not-inc) OR workclass:Self-emp-inc),0.48325358851666933,0.20373183488845825
+49,((relationship:Own-child OR relationship:Not-in-family) AND (NOT occupation:Sales)),0.334128878281583,-0.1455501914024353
+50,((education-num AND (NOT education:Assoc-acdm)) OR workclass:State-gov),0.48206599713049036,0.1731874793767929
+51,((occupation:Prof-specialty OR education:Masters) OR capital-gain),0.5275735294116677,0.1660042107105255
+52,((occupation:Prof-specialty OR education:Masters) OR workclass:Local-gov),0.3388704318936314,0.2181507796049118
+53,((education:HS-grad AND (NOT marital-status:Married-civ-spouse)) OR education:11th),0.44041450777194463,-0.1768694818019867
+54,((occupation:Craft-repair OR capital-gain) OR relationship:Wife),0.35648148148142644,0.1366855800151825
+55,((relationship:Own-child OR occupation:Other-service) OR education:9th),0.4965397923874573,-0.21611741185188293
+56,((marital-status:Never-married AND (NOT education-num)) OR occupation:Farming-fishing),0.3433734939758519,-0.10460914671421051
+57,((relationship:Unmarried OR relationship:Own-child) OR native-country:Mexico),0.3499999999999485,-0.21707075834274292
+58,((marital-status:Married-civ-spouse AND (NOT occupation:Adm-clerical)) AND (NOT occupation:Sales)),0.4147239263803172,0.0773467943072319
+59,((occupation:Exec-managerial OR workclass:State-gov) OR workclass:Federal-gov),0.39703153988860906,0.2335463911294937
+60,((marital-status:Married-civ-spouse AND (NOT education:HS-grad)) OR native-country:?),0.3948787061994077,0.17240352928638458
+61,((relationship:Own-child OR occupation:Farming-fishing) OR education:7th-8th),0.35472370766482086,-0.1826837658882141
+62,((relationship:Own-child OR education:Bachelors) AND (NOT relationship:Husband)),0.43793103448268306,-0.06194860115647316
+63,((relationship:Husband OR marital-status:Divorced) AND (NOT education:HS-grad)),0.38345864661649326,0.20041801035404205

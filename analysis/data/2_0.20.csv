@@ -1,0 +1,65 @@
+neuron,feature,iou,weight
+0,(marital-status:Divorced OR occupation:Handlers-cleaners),0.29842931937167566,-0.0049882386811077595
+1,(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.3739837398373477,0.21765339374542236
+2,(relationship:Own-child OR occupation:Transport-moving),0.3407534246574759,-0.08930757641792297
+3,(relationship:Own-child OR marital-status:Widowed),0.27474402730370734,-0.11978779733181
+4,(marital-status:Never-married OR marital-status:Widowed),0.39724310776937377,-0.19615833461284637
+5,(relationship:Husband AND (NOT occupation:Sales)),0.43094629156004716,0.12209059298038483
+6,(education:Masters OR workclass:?),0.3898678414096058,0.0522625669836998
+7,(marital-status:Never-married AND (NOT occupation:Adm-clerical)),0.35704323570427376,-0.19312791526317596
+8,(education-num OR relationship:Wife),0.3384982121572898,0.21826353669166565
+9,(relationship:Own-child OR workclass:Self-emp-not-inc),0.3507340946165822,-0.14889200031757355
+10,(marital-status:Never-married AND (NOT education:Bachelors)),0.36818851251835516,-0.1434612274169922
+11,(relationship:Husband AND (NOT occupation:Craft-repair)),0.41832669322703603,0.16465610265731812
+12,(marital-status:Divorced OR relationship:Own-child),0.39970282317973255,-0.11282118409872055
+13,(education-num OR workclass:?),0.3692307692307255,0.027017025277018547
+14,(relationship:Own-child OR native-country:?),0.4007782101166535,-0.20672190189361572
+15,(occupation:Craft-repair OR capital-gain),0.32994923857862435,0.11260021477937698
+16,(marital-status:Divorced OR occupation:Other-service),0.3613312202852042,-0.1932283639907837
+17,(relationship:Unmarried OR workclass:?),0.3364485981307782,-0.21250726282596588
+18,(sex:Female OR relationship:Own-child),0.3296460176990786,-0.1476495862007141
+19,(occupation:Other-service OR marital-status:Divorced),0.2782738095237681,-0.06931068003177643
+20,(marital-status:Married-civ-spouse OR marital-status:Separated),0.2600364963503412,0.15775318443775177
+21,(education:Bachelors OR capital-loss),0.4085470085469387,0.2285842001438141
+22,(marital-status:Divorced OR workclass:?),0.3407534246574759,-0.1779078245162964
+23,(marital-status:Never-married AND (NOT relationship:Not-in-family)),0.45708582834322214,-0.2158127725124359
+24,(occupation:Exec-managerial OR workclass:Self-emp-not-inc),0.5029239766080891,0.06438713520765305
+25,(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.40055248618778994,0.14095857739448547
+26,(marital-status:Married-civ-spouse AND workclass:Private),0.3828016643550093,0.1725473403930664
+27,(occupation:Prof-specialty OR education:Masters),0.3786407766989556,0.13323935866355896
+28,(relationship:Own-child OR occupation:Other-service),0.38336052202277593,-0.23160262405872345
+29,(marital-status:Never-married OR marital-status:Separated),0.34065934065929904,-0.1641210913658142
+30,(marital-status:Married-civ-spouse AND (NOT education:Bachelors)),0.3842482100238205,0.1859022080898285
+31,(marital-status:Married-civ-spouse AND (NOT occupation:Machine-op-inspct)),0.37799564270148384,0.13250447809696198
+32,(relationship:Husband OR workclass:Federal-gov),0.3216187433439487,0.20843960344791412
+33,(marital-status:Married-civ-spouse AND education-num),0.4166666666665877,0.1530311405658722
+34,(relationship:Own-child OR occupation:Other-service),0.3249999999999492,-0.10359474271535873
+35,(relationship:Own-child OR occupation:Craft-repair),0.28510638297868296,-0.17044857144355774
+36,(occupation:Other-service OR education:10th),0.24999999999995298,-0.1998574286699295
+37,(relationship:Husband AND (NOT education:HS-grad)),0.3731563421828358,0.15236444771289825
+38,(occupation:Other-service OR workclass:?),0.28745644599298126,-0.07543759793043137
+39,(relationship:Husband AND (NOT education:HS-grad)),0.4127465857359009,0.144889235496521
+40,(relationship:Own-child OR marital-status:Divorced),0.3305084745762245,-0.13646560907363892
+41,(workclass:? OR workclass:Local-gov),0.3081510934393026,-0.25876978039741516
+42,(sex:Female OR workclass:Self-emp-not-inc),0.25649350649347874,-0.1444215178489685
+43,(relationship:Own-child OR relationship:Unmarried),0.31029411764701315,-0.22290053963661194
+44,(relationship:Unmarried OR relationship:Own-child),0.278335724533676,-0.1455630511045456
+45,(workclass:? OR occupation:Handlers-cleaners),0.2744680851063246,-0.13101188838481903
+46,(relationship:Own-child OR occupation:Farming-fishing),0.3327239488116393,-0.10598361492156982
+47,(occupation:Other-service OR occupation:Handlers-cleaners),0.3489278752435967,-0.2050807923078537
+48,(education:Bachelors OR workclass:Self-emp-not-inc),0.4035369774918965,0.20373183488845825
+49,(relationship:Own-child OR relationship:Not-in-family),0.3002114164904545,-0.1455501914024353
+50,(education-num OR workclass:State-gov),0.45490716180365315,0.1731874793767929
+51,(occupation:Prof-specialty OR education:Masters),0.4853556485354633,0.1660042107105255
+52,(occupation:Prof-specialty OR education:Masters),0.3027522935779261,0.2181507796049118
+53,(education:HS-grad AND (NOT marital-status:Married-civ-spouse)),0.3592057761732203,-0.1768694818019867
+54,(occupation:Craft-repair OR capital-gain),0.3165829145728113,0.1366855800151825
+55,(relationship:Own-child OR occupation:Other-service),0.479930191971993,-0.21611741185188293
+56,(marital-status:Never-married OR occupation:Farming-fishing),0.30168269230765604,-0.10460914671421051
+57,(relationship:Unmarried OR relationship:Own-child),0.3122238586155652,-0.21707075834274292
+58,(marital-status:Married-civ-spouse AND (NOT occupation:Adm-clerical)),0.38938053097340825,0.0773467943072319
+59,(occupation:Exec-managerial OR workclass:State-gov),0.33333333333327086,0.2335463911294937
+60,(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.3721244925574598,0.17240352928638458
+61,(relationship:Own-child OR occupation:Farming-fishing),0.30645161290317086,-0.1826837658882141
+62,(relationship:Own-child OR education:Bachelors),0.4166666666666068,-0.06194860115647316
+63,(relationship:Husband AND (NOT education:HS-grad)),0.3492753623187899,0.20041801035404205
