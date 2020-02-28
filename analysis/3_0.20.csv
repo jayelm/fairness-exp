@@ -1,0 +1,65 @@
+feature,iou,neuron,weight
+((marital-status:Never-married OR marital-status:Separated) AND (NOT education-num)),0.4380032206118457,0,-0.14065255224704742
+((education-num OR workclass:Self-emp-not-inc) AND marital-status:Married-civ-spouse),0.4547069271757629,1,0.16639366745948792
+((relationship:Not-in-family OR relationship:Unmarried) AND (NOT education:Bachelors)),0.32687338501287766,2,-0.18031775951385498
+((marital-status:Divorced OR education:11th) OR occupation:Adm-clerical),0.3446244477171804,3,-0.15777672827243805
+((relationship:Husband AND (NOT education:HS-grad)) OR occupation:Transport-moving),0.45755395683446654,4,0.15086629986763
+((marital-status:Married-civ-spouse AND (NOT education:HS-grad)) AND (NOT education:Some-college)),0.4266441821247172,5,0.19059722125530243
+((relationship:Unmarried OR workclass:?) OR occupation:Farming-fishing),0.3246527777777214,6,-0.15295614302158356
+((education:Bachelors OR relationship:Wife) AND (NOT marital-status:Never-married)),0.40471512770129575,7,0.20862960815429688
+((education-num AND relationship:Husband) OR workclass:Self-emp-inc),0.45631067961156185,8,0.16281428933143616
+((fnlwgt AND (NOT marital-status:Married-civ-spouse)) OR education:11th),0.28861788617882267,9,-0.07624994963407516
+((occupation:Sales OR workclass:Local-gov) OR capital-gain),0.37862595419841544,10,0.08528422564268112
+((occupation:Other-service OR occupation:Handlers-cleaners) OR workclass:?),0.34933774834431297,11,-0.2322472631931305
+((relationship:Unmarried OR workclass:?) OR marital-status:Divorced),0.3685847589423999,12,-0.09980624914169312
+((marital-status:Never-married AND (NOT relationship:Not-in-family)) OR marital-status:Widowed),0.4906367041197583,13,-0.18615493178367615
+((workclass:? OR occupation:Other-service) OR occupation:Farming-fishing),0.3047775947281211,14,-0.1772148609161377
+((education:Bachelors OR workclass:Self-emp-inc) OR native-country:?),0.40885860306636984,15,0.2031112015247345
+((relationship:Husband AND education-num) OR workclass:Self-emp-inc),0.45914396887150594,16,0.1497463881969452
+((marital-status:Never-married OR relationship:Unmarried) AND (NOT education:HS-grad)),0.3611510791366387,17,-0.14129649102687836
+((marital-status:Never-married OR marital-status:Separated) OR workclass:?),0.3565621370499005,18,-0.20505575835704803
+((education-num OR workclass:?) AND (NOT education:Bachelors)),0.579457364340973,19,0.1637108027935028
+((relationship:Husband AND (NOT education:HS-grad)) OR workclass:Self-emp-inc),0.37571428571423204,20,0.12443080544471741
+((relationship:Husband AND (NOT workclass:Self-emp-not-inc)) OR education:Masters),0.40718562874246617,21,0.13646440207958221
+((relationship:Own-child OR workclass:Local-gov) OR native-country:?),0.377049180327807,22,-0.17662352323532104
+((education:Masters OR occupation:Transport-moving) OR native-country:?),0.42576419213964506,23,0.23019513487815857
+((occupation:Prof-specialty OR education:Masters) OR education:Assoc-acdm),0.6079664570229334,24,0.17660893499851227
+((capital-gain OR relationship:Wife) OR education:Assoc-voc),0.45849802371532444,25,0.15482433140277863
+((marital-status:Never-married OR marital-status:Widowed) AND (NOT education:Some-college)),0.3453757225433027,26,-0.21916306018829346
+((education:Some-college OR education:11th) OR workclass:?),0.3497942386830796,27,-0.09322425723075867
+((marital-status:Married-civ-spouse AND education-num) OR workclass:Self-emp-inc),0.422459893048053,28,0.11030717939138412
+((marital-status:Never-married AND (NOT education-num)) OR marital-status:Separated),0.4080996884734567,29,-0.16878797113895416
+((marital-status:Never-married AND (NOT education:Bachelors)) OR marital-status:Married-spouse-absent),0.4289985052316249,30,-0.16484445333480835
+((marital-status:Married-civ-spouse AND education-num) OR workclass:Self-emp-inc),0.4509090909090089,31,0.16248776018619537
+((occupation:Exec-managerial OR workclass:Self-emp-not-inc) OR occupation:Protective-serv),0.43950177935935236,32,0.20264464616775513
+((marital-status:Married-civ-spouse AND (NOT workclass:Private)) OR capital-gain),0.40456769983680185,33,0.19958235323429108
+((occupation:Exec-managerial OR occupation:Craft-repair) OR education:Assoc-acdm),0.3510791366905969,34,0.19427341222763062
+((relationship:Husband AND (NOT occupation:Craft-repair)) AND (NOT occupation:Transport-moving)),0.36081081081076205,35,0.12284743040800095
+((marital-status:Never-married AND (NOT education-num)) AND (NOT occupation:Sales)),0.3550600343052564,36,-0.08894948661327362
+((relationship:Own-child OR relationship:Not-in-family) OR relationship:Unmarried),0.3168498168497878,37,-0.16384565830230713
+((relationship:Not-in-family OR education:11th) OR relationship:Other-relative),0.3354510800507833,38,-0.1365741342306137
+((marital-status:Married-civ-spouse AND (NOT education:Bachelors)) AND (NOT education:Some-college)),0.4609720176729807,39,0.13205794990062714
+((relationship:Unmarried OR workclass:?) OR education:10th),0.4081632653060467,40,-0.1044577807188034
+((education-num AND (NOT education:Bachelors)) OR capital-loss),0.4165170556552214,41,0.16745494306087494
+((workclass:Local-gov OR occupation:Other-service) OR education:Assoc-voc),0.3982758620688968,42,-0.13766340911388397
+((occupation:Exec-managerial OR workclass:Self-emp-not-inc) OR occupation:Protective-serv),0.49814814814805586,43,0.04656188189983368
+((marital-status:Never-married AND (NOT education:Bachelors)) OR occupation:Protective-serv),0.4976599063961782,44,-0.1274554580450058
+((occupation:Prof-specialty OR occupation:Exec-managerial) OR native-country:?),0.41590214067271924,45,0.16166706383228302
+((capital-gain OR workclass:?) OR occupation:Tech-support),0.3658088235293445,46,0.243178591132164
+((capital-gain OR education:Masters) OR relationship:Wife),0.450676982591789,47,0.15626078844070435
+((education-num OR occupation:Transport-moving) AND (NOT marital-status:Never-married)),0.4151515151514522,48,0.19661913812160492
+((occupation:Exec-managerial OR occupation:Transport-moving) OR relationship:Wife),0.3856209150326167,49,0.18265461921691895
+((marital-status:Married-civ-spouse AND (NOT education:HS-grad)) AND (NOT occupation:Transport-moving)),0.45066273932246675,50,0.17299272119998932
+((relationship:Own-child OR marital-status:Separated) OR native-country:?),0.3977900552485455,51,-0.20480498671531677
+((marital-status:Never-married AND (NOT occupation:Prof-specialty)) AND (NOT occupation:Handlers-cleaners)),0.4345146379044014,52,-0.13203418254852295
+((marital-status:Married-civ-spouse AND (NOT education:HS-grad)) OR relationship:Wife),0.378272251308851,53,0.17489023506641388
+((occupation:Prof-specialty OR occupation:Protective-serv) OR education:Assoc-acdm),0.4457364341084407,54,0.09709379822015762
+((occupation:Other-service OR occupation:Sales) OR occupation:Tech-support),0.3643178410794056,55,-0.2161298245191574
+((workclass:? OR occupation:Other-service) OR occupation:Transport-moving),0.37337662337656274,56,-0.23175464570522308
+((relationship:Husband AND (NOT education:HS-grad)) OR capital-gain),0.3652291105120801,57,0.14450189471244812
+((marital-status:Married-civ-spouse AND (NOT education:Some-college)) AND (NOT education:Bachelors)),0.3682758620689147,58,0.13916447758674622
+((workclass:? OR workclass:Self-emp-inc) OR occupation:Farming-fishing),0.3771186440677167,59,-0.02983885444700718
+((relationship:Own-child OR occupation:Other-service) OR occupation:Farming-fishing),0.3990610328637873,60,-0.21476256847381592
+((marital-status:Never-married AND (NOT education-num)) OR workclass:?),0.4991974317816213,61,-0.13200584053993225
+((workclass:? OR relationship:Unmarried) OR education:11th),0.4083484573501981,62,-0.15689055621623993
+((education-num AND (NOT relationship:Own-child)) OR workclass:Federal-gov),0.44397759103635237,63,0.2421029508113861

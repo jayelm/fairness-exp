@@ -1,0 +1,65 @@
+feature,iou,neuron,weight
+(marital-status:Never-married AND (NOT education-num)),0.3947797716149437,0,-0.14065255224704742
+(marital-status:Married-civ-spouse AND education-num),0.3699633699633022,1,0.16639366745948792
+(relationship:Not-in-family OR relationship:Unmarried),0.2876254180601686,2,-0.18031775951385498
+(marital-status:Divorced OR education:11th),0.3134851138353216,3,-0.15777672827243805
+(relationship:Husband AND (NOT occupation:Machine-op-inspct)),0.43407960198999573,4,0.15086629986763
+(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.4083333333332766,5,0.19059722125530243
+(relationship:Unmarried OR workclass:?),0.27678571428566484,6,-0.15295614302158356
+(education:Bachelors OR relationship:Wife),0.36661211129290233,7,0.20862960815429688
+(education-num OR workclass:Self-emp-inc),0.3836477987420901,8,0.16281428933143616
+(fnlwgt AND (NOT marital-status:Married-civ-spouse)),0.25558659217873525,9,-0.07624994963407516
+(occupation:Sales OR workclass:Local-gov),0.3172413793102901,10,0.08528422564268112
+(occupation:Other-service OR relationship:Own-child),0.30864197530859433,11,-0.2322472631931305
+(relationship:Unmarried OR workclass:?),0.31918819188185993,12,-0.09980624914169312
+(marital-status:Never-married AND (NOT relationship:Not-in-family)),0.43984220907289157,13,-0.18615493178367615
+(workclass:? OR occupation:Other-service),0.2504230118442892,14,-0.1772148609161377
+(education:Bachelors OR workclass:Self-emp-inc),0.3704974271011371,15,0.2031112015247345
+(relationship:Husband AND education-num),0.370588235294045,16,0.1497463881969452
+(marital-status:Never-married OR relationship:Unmarried),0.33704115684089686,17,-0.14129649102687836
+(marital-status:Never-married OR marital-status:Separated),0.3292978208232047,18,-0.20505575835704803
+(workclass:? OR education:Masters),0.48820754716969617,19,0.1637108027935028
+(relationship:Husband OR workclass:Self-emp-inc),0.33623503808483823,20,0.12443080544471741
+(relationship:Husband OR education:Masters),0.38858397365528113,21,0.13646440207958221
+(relationship:Own-child OR workclass:Local-gov),0.34223706176955887,22,-0.17662352323532104
+(education:Masters OR occupation:Transport-moving),0.35448577680517407,23,0.23019513487815857
+(occupation:Prof-specialty OR education:Masters),0.5707964601768649,24,0.17660893499851227
+(capital-gain OR relationship:Wife),0.39330543933046164,25,0.15482433140277863
+(marital-status:Never-married AND (NOT education:Some-college)),0.28994082840232394,26,-0.21916306018829346
+(education:Some-college OR education:11th),0.3245614035087245,27,-0.09322425723075867
+(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.38335607094128465,28,0.11030717939138412
+(marital-status:Never-married AND (NOT education-num)),0.3745980707394896,29,-0.16878797113895416
+(marital-status:Never-married AND (NOT education:Bachelors)),0.4012066365006936,30,-0.16484445333480835
+(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.4063800277391946,31,0.16248776018619537
+(occupation:Exec-managerial OR workclass:Self-emp-not-inc),0.4095063985374022,32,0.20264464616775513
+(marital-status:Married-civ-spouse AND (NOT workclass:Private)),0.34615384615378275,33,0.19958235323429108
+(occupation:Exec-managerial OR occupation:Craft-repair),0.313056379821912,34,0.19427341222763062
+(relationship:Husband AND (NOT occupation:Craft-repair)),0.33667083854814306,35,0.12284743040800095
+(marital-status:Never-married AND (NOT education-num)),0.32352941176465577,36,-0.08894948661327362
+(relationship:Own-child OR relationship:Not-in-family),0.2866108786610579,37,-0.16384565830230713
+(relationship:Not-in-family OR marital-status:Never-married),0.309743589743558,38,-0.1365741342306137
+(marital-status:Married-civ-spouse AND (NOT education:Bachelors)),0.4303329223180727,39,0.13205794990062714
+(relationship:Unmarried OR workclass:?),0.36450381679382354,40,-0.1044577807188034
+(education-num AND (NOT education:Bachelors)),0.3516068052929392,41,0.16745494306087494
+(workclass:Local-gov OR occupation:Other-service),0.34119782214149885,42,-0.13766340911388397
+(occupation:Exec-managerial OR workclass:Self-emp-not-inc),0.4465290806753383,43,0.04656188189983368
+(marital-status:Never-married AND (NOT education:Bachelors)),0.4652996845425133,44,-0.1274554580450058
+(education-num OR native-country:?),0.3793103448275377,45,0.16166706383228302
+(capital-gain OR workclass:?),0.2905660377357942,46,0.243178591132164
+(capital-gain OR education:Masters),0.38025210084025624,47,0.15626078844070435
+(relationship:Husband AND (NOT education:HS-grad)),0.3691176470587692,48,0.19661913812160492
+(occupation:Exec-managerial OR occupation:Transport-moving),0.3286219081271504,49,0.18265461921691895
+(marital-status:Married-civ-spouse AND (NOT education:HS-grad)),0.43626062322939996,50,0.17299272119998932
+(relationship:Own-child OR marital-status:Separated),0.35580524344562625,51,-0.20480498671531677
+(marital-status:Never-married AND (NOT occupation:Prof-specialty)),0.40955137481904347,52,-0.13203418254852295
+(capital-gain OR relationship:Wife),0.3373493975902937,53,0.17489023506641388
+(occupation:Prof-specialty OR occupation:Protective-serv),0.4188911704311255,54,0.09709379822015762
+(occupation:Other-service OR occupation:Sales),0.32031249999994993,55,-0.2161298245191574
+(marital-status:Divorced OR relationship:Own-child),0.3248945147678868,56,-0.23175464570522308
+(relationship:Husband AND (NOT occupation:Transport-moving)),0.34543325526928037,57,0.14450189471244812
+(marital-status:Married-civ-spouse AND (NOT education:Some-college)),0.3503480278421867,58,0.13916447758674622
+(workclass:? OR workclass:Self-emp-inc),0.3215859030836296,59,-0.02983885444700718
+(relationship:Own-child OR occupation:Other-service),0.3699515347333812,60,-0.21476256847381592
+(marital-status:Never-married AND (NOT education-num)),0.47923875432517654,61,-0.13200584053993225
+(workclass:? OR relationship:Unmarried),0.33147113594034794,62,-0.15689055621623993
+(education-num OR workclass:Federal-gov),0.41612483745118123,63,0.2421029508113861
