@@ -11,6 +11,7 @@ import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
+from contextlib import nullcontext
 
 from tqdm import trange
 import formula as F
@@ -64,34 +65,35 @@ def load(
     fname,
     hide_features=(),
     remove_features=("fnlwgt", "education-num"),
-    protected_features=("sex")
-    #  fname, hide_features=(), remove_features=("fnlwgt", "education-num")
+    protected_features=("sex"),
+    features=None,
 ):
     n_features = 15
-    types = [set() for _ in range(n_features)]
+    if features is None:
+        types = [set() for _ in range(n_features)]
 
-    with open(fname) as reader:
-        for line in reader:
-            values = line.strip().split(",")
-            for i, value in enumerate(values):
-                types[i].add(value.strip())
+        with open(fname) as reader:
+            for line in reader:
+                values = line.strip().split(",")
+                for i, value in enumerate(values):
+                    types[i].add(value.strip())
 
-    features = [
-        ScalarFeature("age"),
-        CatFeature("workclass", sorted(types[1])),
-        ScalarFeature("fnlwgt"),
-        CatFeature("education", sorted(types[3])),
-        ScalarFeature("education-num"),
-        CatFeature("marital-status", sorted(types[5])),
-        CatFeature("occupation", sorted(types[6])),
-        CatFeature("relationship", sorted(types[7])),
-        CatFeature("race", sorted(types[8])),
-        CatFeature("sex", sorted(types[9])),
-        ScalarFeature("capital-gain"),
-        ScalarFeature("capital-loss"),
-        ScalarFeature("hours-per-week"),
-        CatFeature("native-country", sorted(types[13])),
-    ]
+        features = [
+            ScalarFeature("age"),
+            CatFeature("workclass", sorted(types[1])),
+            ScalarFeature("fnlwgt"),
+            CatFeature("education", sorted(types[3])),
+            ScalarFeature("education-num"),
+            CatFeature("marital-status", sorted(types[5])),
+            CatFeature("occupation", sorted(types[6])),
+            CatFeature("relationship", sorted(types[7])),
+            CatFeature("race", sorted(types[8])),
+            CatFeature("sex", sorted(types[9])),
+            ScalarFeature("capital-gain"),
+            ScalarFeature("capital-loss"),
+            ScalarFeature("hours-per-week"),
+            CatFeature("native-country", sorted(types[13])),
+        ]
 
     xs = []
     xs_hidden = []
@@ -148,7 +150,7 @@ def load(
                     ]
                 )
             )
-            ys.append(0 if values[-1].strip() == "<=50K" else 1)
+            ys.append(0 if values[-1].strip() in {"<=50K", "<=50K."} else 1)
 
     features_cleaned = [f for f in features if f.name not in remove_features]
 
@@ -160,49 +162,50 @@ def load(
 
     mean = np.mean(xs, axis=0, keepdims=True)
     std = np.std(xs, axis=0, keepdims=True)
-    xs = (xs - mean) / std
+    xs = (xs - mean) / (std + np.finfo(np.float32).tiny)
 
     mean_hidden = np.mean(xs_hidden, axis=0, keepdims=True)
     std_hidden = np.std(xs_hidden, axis=0, keepdims=True)
-    xs_hidden = (xs_hidden - mean_hidden) / std_hidden
+    xs_hidden = (xs_hidden - mean_hidden) / (std_hidden + np.finfo(np.float32).tiny)
 
     #  mean_heldout = np.mean(xs_heldout, axis=0, keepdims=True)
     #  std_heldout = np.std(xs_heldout, axis=0, keepdims=True)
     #  xs_heldout = (xs_heldout - mean_heldout) / std_heldout
 
-    return xs, xs_hidden, xs_heldout, xs_prot, ys, features_cleaned
+    return xs, xs_hidden, xs_heldout, xs_prot, ys, features_cleaned, features
 
 
-def train(args):
-    xs, xs_hidden, xs_heldout, xs_prot, ys, features = load(args.train_data)
-    feature_names = names(features)
-    loader = DataLoader(
-        list(zip(xs_hidden, ys, xs_heldout, xs_prot)),
-        batch_size=args.batch_size,
-        shuffle=True,
-    )
+def run(
+    epoch,
+    split,
+    model,
+    loss_fn,
+    opt,
+    adversary,
+    a_loss_fn,
+    a_opt,
+    loader,
+    params,
+    feature_names,
+    args,
+):
+    train = split == "train"
+    if train:
+        model.train()
+        ctx = nullcontext
+    else:
+        model.eval()
+        ctx = torch.no_grad
 
-    model = MLP(xs_hidden.shape[1], args.n_hidden, 1)
-    adversary = Adversary(2, 2, xs_prot.shape[1])
-    a_loss_fn = nn.BCEWithLogitsLoss()
-    a_opt = optim.Adam(list(adversary.parameters()), lr=0.0001)
-    a_params = list(adversary.named_parameters())
-
-    loss_fn = nn.BCEWithLogitsLoss()
-    params = list(model.named_parameters())
-    opt = optim.Adam(list(model.parameters()), lr=0.001)
-    scheduler = optim.lr_scheduler.LambdaLR(opt, lambda epoch: 1 / (epoch + 1))
-
-    ranger = trange(args.epochs, desc=f"epoch 0")
-    for i in ranger:
-        epoch_loss = 0
-        epoch_acc = 0
-        adversary_acc = 0
-        adversary_loss = 0
-        batch_count = 0
-        all_preds = []
-        all_ys = []
-        all_xs = []
+    epoch_loss = 0
+    epoch_acc = 0
+    adversary_acc = 0
+    adversary_loss = 0
+    batch_count = 0
+    all_preds = []
+    all_ys = []
+    all_xs = []
+    with ctx():
         for batch_i, (batch_xs, batch_ys, batch_xs_heldout, batch_xs_prot) in enumerate(
             loader
         ):
@@ -222,33 +225,34 @@ def train(args):
             all_ys.append((batch_ys).numpy())
             all_xs.append(batch_xs.numpy())
 
-            a_loss.backward(retain_graph=True)
+            if train:
+                a_loss.backward(retain_graph=True)
 
-            protect_grad = {name: p.grad.clone() for (name, p) in params}
+                protect_grad = {name: p.grad.clone() for (name, p) in params}
 
-            # Update the model
-            opt.zero_grad()
-            a_opt.zero_grad()
-            loss.backward(retain_graph=True)
-            epoch_loss += loss.item()
+                # Update the model
+                opt.zero_grad()
+                a_opt.zero_grad()
+                loss.backward(retain_graph=True)
+                epoch_loss += loss.item()
 
-            for name, p in params:
-                unit_protect = protect_grad[name] / (
-                    torch.norm(protect_grad[name]) + np.finfo(np.float32).tiny
-                )
-                # Modify graadients
-                if args.debias:
-                    p.grad -= (p.grad * unit_protect).sum() * unit_protect
-                    alpha = np.sqrt(i + 1)
-                    p.grad -= alpha * protect_grad[name]
+                for name, p in params:
+                    unit_protect = protect_grad[name] / (
+                        torch.norm(protect_grad[name]) + np.finfo(np.float32).tiny
+                    )
+                    # Modify graadients
+                    if args.debias:
+                        p.grad -= (p.grad * unit_protect).sum() * unit_protect
+                        alpha = np.sqrt(epoch + 1)
+                        p.grad -= alpha * protect_grad[name]
 
-            opt.step()
+                opt.step()
 
-            # Update the adversary
-            a_opt.zero_grad()
-            opt.zero_grad()
-            a_loss.backward()
-            a_opt.step()
+                # Update the adversary
+                a_opt.zero_grad()
+                opt.zero_grad()
+                a_loss.backward()
+                a_opt.step()
 
             adversary_acc += a_acc
             adversary_loss += a_loss.item()
@@ -260,14 +264,89 @@ def train(args):
         all_preds = np.concatenate(all_preds)
         all_xs = np.concatenate(all_xs)
         all_ys = np.concatenate(all_ys)
-        report_bias_stats(all_xs, all_ys, all_preds, feature_names)
+        bias_stats = compute_bias_stats(all_xs, all_ys, all_preds, feature_names)
+        stats = {
+            "epoch": epoch,
+            "loss": epoch_loss / batch_count,
+            "a_loss": adversary_loss / batch_count,
+            "acc": epoch_acc / batch_count,
+            "a_acc": adversary_acc / batch_count,
+        }
+        stats.update(bias_stats)
 
-        avg_loss = epoch_loss / batch_count
-        avg_a_loss = adversary_loss / batch_count
-        avg_acc = epoch_acc / batch_count
-        avg_a_acc = adversary_acc / batch_count
-        desc = f"epoch {i} loss: {avg_loss:.3f}, acc: {avg_acc:.3f}, adv loss {avg_a_loss:.3f}, adv acc: {avg_a_acc:.3f}"
-        ranger.set_description(desc)
+        return stats
+
+
+def train(args):
+    xs, xs_hidden, xs_heldout, xs_prot, ys, features, forig = load(args.train_data)
+    (
+        test_xs,
+        test_xs_hidden,
+        test_xs_heldout,
+        test_xs_prot,
+        test_ys,
+        _,
+        _
+    ) = load(args.test_data, features=forig)
+    breakpoint()
+    #  print(set(names(features)) - set(names(test_features)))
+    feature_names = names(features)
+    train_loader = DataLoader(
+        list(zip(xs_hidden, ys, xs_heldout, xs_prot)),
+        batch_size=args.batch_size,
+        shuffle=True,
+    )
+    test_loader = DataLoader(
+        list(zip(test_xs_hidden, test_ys, test_xs_heldout, test_xs_prot)),
+        batch_size=args.batch_size,
+        shuffle=False,
+    )
+
+    model = MLP(xs_hidden.shape[1], args.n_hidden, 1)
+    adversary = Adversary(2, 2, xs_prot.shape[1])
+    a_loss_fn = nn.BCEWithLogitsLoss()
+    a_opt = optim.Adam(list(adversary.parameters()), lr=0.0001)
+
+    loss_fn = nn.BCEWithLogitsLoss()
+    params = list(model.named_parameters())
+    opt = optim.Adam(list(model.parameters()), lr=0.001)
+    #  scheduler = optim.lr_scheduler.LambdaLR(opt, lambda epoch: 1 / (epoch + 1))
+
+    ranger = trange(args.epochs, desc=f"epoch 0")
+    for i in ranger:
+        train_stats = run(
+            i,
+            "train",
+            model,
+            loss_fn,
+            opt,
+            adversary,
+            a_loss_fn,
+            a_opt,
+            train_loader,
+            params,
+            feature_names,
+            args,
+        )
+
+        test_stats = run(
+            i,
+            "test",
+            model,
+            loss_fn,
+            opt,
+            adversary,
+            a_loss_fn,
+            a_opt,
+            test_loader,
+            params,
+            feature_names,
+            args,
+        )
+
+        desc = f"epoch {i} loss: {train_stats['loss']:.3f}, acc: {train_stats['acc']:.3f}, adv loss {train_stats['a_loss']:.3f}, adv acc: {train_stats['a_acc']:.3f}"
+        test_desc = f"test acc: {test_stats['acc']:.3f} parity: {test_stats['parity']:.3f} eqg50k: {test_stats['eqgt50k']:.3f} eqlt50k: {test_stats['eqlt50k']:.3f}"
+        ranger.set_description(f"{desc} {test_desc}")
 
     torch.save(model.state_dict(), args.save_model)
 
@@ -290,7 +369,7 @@ def mask_threshold(feats, threshold):
     return feats > thresholds
 
 
-def report_bias_stats(xs, ys, preds, feature_names):
+def compute_bias_stats(xs, ys, preds, feature_names):
     # TPs/FNs
     fi = feature_names.index("sex:Female")
     mi = feature_names.index("sex:Male")
@@ -299,12 +378,12 @@ def report_bias_stats(xs, ys, preds, feature_names):
     is_m = xs[:, mi] > 0
     n_female = is_f.sum()
     n_male = is_m.sum()
-    print(f"n female: {n_female} n male: {n_male}")
+    #  print(f"n female: {n_female} n male: {n_male}")
 
     acc_f = (ys[is_f] == preds[is_f]).mean()
     acc_m = (ys[is_m] == preds[is_m]).mean()
-    print(f"female acc: {acc_f:.3f}")
-    print(f"male acc: {acc_m:.3f}")
+    #  print(f"female acc: {acc_f:.3f}")
+    #  print(f"male acc: {acc_m:.3f}")
 
     cm = confusion_matrix(ys[is_f], preds[is_f])
     tn, fp, fn, tp = cm.ravel()
@@ -313,7 +392,7 @@ def report_bias_stats(xs, ys, preds, feature_names):
     pc_0f = tn / (tn + fp)
     fp_f = fp / n_female
     fn_f = fn / n_female
-    print(f"female error rates: FP {fp_f:.3f} FN {fn_f:.3f}")
+    #  print(f"female error rates: FP {fp_f:.3f} FN {fn_f:.3f}")
 
     cm = confusion_matrix(ys[is_m], preds[is_m])
     tn, fp, fn, tp = cm.ravel()
@@ -323,14 +402,14 @@ def report_bias_stats(xs, ys, preds, feature_names):
     pc_0m = tn / (tn + fp)
     fp_m = fp / n_female
     fn_m = fn / n_female
-    print(f"male error rates: FP {fp_m:.3f} FN {fn_m:.3f}")
+    #  print(f"male error rates: FP {fp_m:.3f} FN {fn_m:.3f}")
 
     parity = abs(probtrue_f - probtrue_m)
     eqgt50k = abs(pc_1f - pc_1m)
     eqlt50k = abs(pc_0f - pc_0m)
-    print(f"parity gap: {parity:.3f}")
-    print(f"equality gap >50k: {eqgt50k:.3f}")
-    print(f"equality gap <50k: {eqlt50k:.3f}")
+    #  print(f"parity gap: {parity:.3f}")
+    #  print(f"equality gap >50k: {eqgt50k:.3f}")
+    #  print(f"equality gap <50k: {eqlt50k:.3f}")
     return {
         "parity": parity,
         "eqgt50k": eqgt50k,
@@ -345,7 +424,7 @@ def report_bias_stats(xs, ys, preds, feature_names):
 
 
 def analyze(args):
-    xs, xs_hidden, xs_heldout, xs_prot, ys, features = load(args.train_data)
+    xs, xs_hidden, xs_heldout, xs_prot, ys, features, forig = load(args.train_data)
 
     ref_xs = xs[: args.n_explain, :]
     ref_xs_hidden = xs_hidden[: args.n_explain, :]
