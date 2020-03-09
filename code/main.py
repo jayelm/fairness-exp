@@ -21,7 +21,7 @@ class Adversary(nn.Module):
     def __init__(self, n_inp, n_hidden, n_out):
         super().__init__()
         self.mlp = nn.Sequential(
-            nn.Linear(n_inp, n_hidden), nn.ReLU(), nn.Linear(n_hidden, n_out)
+            nn.Linear(n_inp, n_hidden), nn.ReLU(), nn.Linear(n_hidden, n_out),
         )
 
     def forward(self, inp):
@@ -219,12 +219,16 @@ def run(
         for batch_i, (batch_xs, batch_ys, batch_xs_heldout, batch_xs_prot) in enumerate(
             loader
         ):
-            _, pred = model(batch_xs)
+            rep, pred = model(batch_xs)
 
             loss = loss_fn(pred, batch_ys.float())
 
-            a_inp = torch.stack((pred, batch_ys.float()), 1)
-            a_pred = adversary(a_inp)
+            if args.debias_mode == "zhang":
+                a_inp = torch.stack((pred, batch_ys.float()), 1)
+                a_pred = adversary(a_inp)
+            elif args.debias_mode == "beutel":
+                a_pred = adversary(rep)
+
             # Unwrap
             protected = batch_xs_prot.view(-1)
             a_pred = a_pred.view(-1)
@@ -236,33 +240,48 @@ def run(
             all_xs.append(batch_xs.numpy())
 
             if train:
-                a_loss.backward(retain_graph=True)
+                if args.debias_mode == "zhang":
+                    # Optimize the predictor, modifying gradients to maximize
+                    # adversarial loss (+ projection)
+                    a_loss.backward(retain_graph=True)
 
-                protect_grad = {name: p.grad.clone() for (name, p) in params}
+                    protect_grad = {name: p.grad.clone() for (name, p) in params}
 
-                # Update the model
-                opt.zero_grad()
-                a_opt.zero_grad()
-                loss.backward(retain_graph=True)
-                epoch_loss += loss.item()
+                    opt.zero_grad()
+                    a_opt.zero_grad()
+                    loss.backward(retain_graph=True)
 
-                for name, p in params:
-                    unit_protect = protect_grad[name] / (
-                        torch.norm(protect_grad[name]) + np.finfo(np.float32).tiny
-                    )
-                    # Modify graadients
+                    for name, p in params:
+                        unit_protect = protect_grad[name] / (
+                            torch.norm(protect_grad[name]) + np.finfo(np.float32).tiny
+                        )
+                        # Modify graadients
+                        if args.debias:
+                            p.grad -= (p.grad * unit_protect).sum() * unit_protect
+                            #  alpha = np.sqrt(epoch + 1)
+                            p.grad -= args.alpha * protect_grad[name]
+                    opt.step()
+
+                elif args.debias_mode == "beutel":
+                    # Optimize the predictor with the adversarial loss
+                    a_opt.zero_grad()
+                    opt.zero_grad()
+
                     if args.debias:
-                        p.grad -= (p.grad * unit_protect).sum() * unit_protect
-                        alpha = np.sqrt(epoch + 1)
-                        p.grad -= alpha * protect_grad[name]
+                        comb_loss = loss + (-args.alpha * a_loss)
+                    else:
+                        comb_loss = loss
 
-                opt.step()
+                    comb_loss.backward(retain_graph=True)
+                    opt.step()
 
-                # Update the adversary
+                # Optimize the adversary
                 a_opt.zero_grad()
                 opt.zero_grad()
                 a_loss.backward()
                 a_opt.step()
+
+            epoch_loss += loss.item()
 
             adversary_acc += a_acc
             adversary_loss += a_loss.item()
@@ -289,15 +308,9 @@ def run(
 
 def train(args):
     xs, xs_hidden, xs_heldout, xs_prot, ys, features, forig = load(args.train_data)
-    (
-        test_xs,
-        test_xs_hidden,
-        test_xs_heldout,
-        test_xs_prot,
-        test_ys,
-        _,
-        _
-    ) = load(args.test_data, features=forig)
+    (test_xs, test_xs_hidden, test_xs_heldout, test_xs_prot, test_ys, _, _) = load(
+        args.test_data, features=forig
+    )
     #  print(set(names(features)) - set(names(test_features)))
     feature_names = names(features)
     train_loader = DataLoader(
@@ -312,7 +325,10 @@ def train(args):
     )
 
     model = MLP(xs_hidden.shape[1], args.n_hidden, 1)
-    adversary = Adversary(2, 2, xs_prot.shape[1])
+    if args.debias_mode == "zhang":
+        adversary = Adversary(2, 2, xs_prot.shape[1])
+    elif args.debias_mode == "beutel":
+        adversary = Adversary(args.n_hidden, 16, xs_prot.shape[1])
     a_loss_fn = nn.BCEWithLogitsLoss()
     a_opt = optim.Adam(list(adversary.parameters()), lr=0.0001)
 
@@ -453,7 +469,7 @@ def analyze(args):
     model.load_state_dict(torch.load(args.save_model))
 
     accs = []
-    preds = []
+    all_preds = []
 
     # Get neuron activations
     neuron_acts = np.zeros((len(ref_xs), args.n_hidden), dtype=np.float32)
@@ -462,16 +478,16 @@ def analyze(args):
             reps, preds = model(batch_xs)
         reps = reps.cpu().numpy()
         pred_labels = preds > 0
-        preds.append(pred_labels.cpu().numpy())
+        all_preds.append(pred_labels.cpu().numpy())
         acc = (pred_labels == batch_ys).float().mean().item()
         accs.append(acc)
 
         start = i_batch * args.batch_size
         end = start + args.batch_size
         neuron_acts[start:end] = reps
-    preds = np.concatenate(preds)
+    all_preds = np.concatenate(all_preds)
 
-    report_bias_stats(ref_xs, ref_ys, preds, feature_names)
+    compute_bias_stats(ref_xs, ref_ys, all_preds, feature_names)
 
     print(f"accuracy: {np.mean(accs):.3f}")
     neuron_masks = neuron_acts > 0
@@ -626,7 +642,9 @@ if __name__ == "__main__":
 
     parser.add_argument("mode", choices=["train", "analyze"])
     parser.add_argument("--n_hidden", default=64, type=int)
+    parser.add_argument("--debias_mode", default="zhang", choices=["zhang", "beutel"])
     parser.add_argument("--debias", action="store_true")
+    parser.add_argument("--alpha", default=1.0, type=float)
     parser.add_argument("--epochs", default=10, type=int)
     parser.add_argument("--batch_size", default=32, type=int)
     parser.add_argument("--beam_size", default=10, type=int)
