@@ -301,20 +301,47 @@ def report_bias_stats(xs, ys, preds, feature_names):
     n_male = is_m.sum()
     print(f"n female: {n_female} n male: {n_male}")
 
-    print(f"female acc: {(ys[is_f] == preds[is_f]).mean()}")
-    print(f"male acc: {(ys[is_m] == preds[is_m]).mean()}")
+    acc_f = (ys[is_f] == preds[is_f]).mean()
+    acc_m = (ys[is_m] == preds[is_m]).mean()
+    print(f"female acc: {acc_f:.3f}")
+    print(f"male acc: {acc_m:.3f}")
 
     cm = confusion_matrix(ys[is_f], preds[is_f])
     tn, fp, fn, tp = cm.ravel()
-    fp = fp / n_female
-    fn = fn / n_female
-    print(f"female error rates: FP {fp:.3f} FN {fn:.3f}")
+    probtrue_f = (tn + tp) / n_female
+    pc_1f = tp / (tp + fn)
+    pc_0f = tn / (tn + fp)
+    fp_f = fp / n_female
+    fn_f = fn / n_female
+    print(f"female error rates: FP {fp_f:.3f} FN {fn_f:.3f}")
 
     cm = confusion_matrix(ys[is_m], preds[is_m])
     tn, fp, fn, tp = cm.ravel()
-    fp = fp / n_male
-    fn = fn / n_male
-    print(f"male error rates: FP {fp:.3f} FN {fn:.3f}")
+    probtrue_m = (tn + tp) / n_male
+
+    pc_1m = tp / (tp + fn)
+    pc_0m = tn / (tn + fp)
+    fp_m = fp / n_female
+    fn_m = fn / n_female
+    print(f"male error rates: FP {fp_m:.3f} FN {fn_m:.3f}")
+
+    parity = abs(probtrue_f - probtrue_m)
+    eqgt50k = abs(pc_1f - pc_1m)
+    eqlt50k = abs(pc_0f - pc_0m)
+    print(f"parity gap: {parity:.3f}")
+    print(f"equality gap >50k: {eqgt50k:.3f}")
+    print(f"equality gap <50k: {eqlt50k:.3f}")
+    return {
+        "parity": parity,
+        "eqgt50k": eqgt50k,
+        "eqlt50k": eqlt50k,
+        "fp_f": fp_f,
+        "fn_f": fn_f,
+        "fp_m": fp_m,
+        "fn_m": fn_m,
+        "acc_f": acc_f,
+        "acc_m": acc_m,
+    }
 
 
 def analyze(args):
