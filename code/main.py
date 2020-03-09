@@ -49,7 +49,7 @@ class ScalarFeature(object):
         return np.array([float(value)])
 
 
-class CatFeature(object):
+class CatFeature:
     def __init__(self, name, values):
         self.name = name
         self.values = values
@@ -59,6 +59,16 @@ class CatFeature(object):
         out = np.zeros(len(self.values))
         out[self.values.index(value)] = 1
         return out
+
+
+class BinaryFeature:
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+        self.type = "binary"
+
+    def __call__(self, value):
+        return [(value == self.value) * 1]
 
 
 def load(
@@ -88,7 +98,7 @@ def load(
             CatFeature("occupation", sorted(types[6])),
             CatFeature("relationship", sorted(types[7])),
             CatFeature("race", sorted(types[8])),
-            CatFeature("sex", sorted(types[9])),
+            BinaryFeature("sex", "Female"),
             ScalarFeature("capital-gain"),
             ScalarFeature("capital-loss"),
             ScalarFeature("hours-per-week"),
@@ -288,7 +298,6 @@ def train(args):
         _,
         _
     ) = load(args.test_data, features=forig)
-    breakpoint()
     #  print(set(names(features)) - set(names(test_features)))
     feature_names = names(features)
     train_loader = DataLoader(
@@ -359,6 +368,8 @@ def names(features):
         elif isinstance(feature, CatFeature):
             for value in feature.values:
                 out.append(feature.name + ":" + value)
+        elif isinstance(feature, BinaryFeature):
+            out.append(feature.name + ":" + feature.value)
         else:
             assert False
     return out
@@ -372,10 +383,9 @@ def mask_threshold(feats, threshold):
 def compute_bias_stats(xs, ys, preds, feature_names):
     # TPs/FNs
     fi = feature_names.index("sex:Female")
-    mi = feature_names.index("sex:Male")
 
     is_f = xs[:, fi] > 0
-    is_m = xs[:, mi] > 0
+    is_m = ~is_f
     n_female = is_f.sum()
     n_male = is_m.sum()
     #  print(f"n female: {n_female} n male: {n_male}")
