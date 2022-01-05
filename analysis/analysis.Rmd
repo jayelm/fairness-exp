@@ -6,12 +6,64 @@ output: html_notebook
 ```{r setup}
 library(tidyverse)
 library(cowplot)
+theme_set(theme_cowplot())
 ```
 
 ```{r}
-neurons <- read_csv('neurons.csv')
-View(neurons)
+view <- function(l, t) {
+  View(ious %>% filter(maxlen == l & threshold == t))
+}
+
+csvs <- list.files('data', full.names = T)
+prims <- csvs[grepl('prim', csvs)]
+csvs <- csvs[!grepl('prim', csvs)]
+
+ious <- sapply(csvs, function(f) {
+  formula_length <- as.numeric(strsplit(strsplit(f, '_')[[1]][1], '/')[[1]][2])
+  threshold <- strsplit(strsplit(f, '_')[[1]][2], ".csv")[[1]][1] %>% as.numeric
+  read_csv(f) %>%
+    mutate(maxlen = factor(formula_length),
+           threshold = threshold)
+}, simplify = F) %>% do.call(rbind, .)
+
+ious_prim <- sapply(prims, function(f) {
+  formula_length <- as.numeric(strsplit(strsplit(f, '_')[[1]][1], '/')[[1]][2])
+  threshold <- strsplit(strsplit(f, '_')[[1]][2], ".csv")[[1]][1] %>% as.numeric
+  read_csv(f) %>%
+    mutate(maxlen = factor(formula_length),
+           threshold = threshold)
+}, simplify = F) %>% do.call(rbind, .)
+
+ggplot(ious, aes(x = maxlen, y = iou, fill = maxlen)) +
+  geom_boxplot() +
+  guides(fill = FALSE) +
+  facet_wrap(~ threshold, labeller = label_both) +
+  xlab('Formula Length') +
+  ylab('IoU') 
+
+view(2, 0.04)
 ```
+
+```{r fig.width = 10, fig.height = 10}
+ip <- ious_prim %>%
+  group_by(primitive, threshold, maxlen) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  group_by(threshold, maxlen) %>%
+  top_n(5, count) %>%
+  ungroup() %>%
+  mutate(primitive = gsub(':', '\n', primitive)) %>%
+  filter(maxlen == 3)
+
+View(ip)
+
+ggplot(ip, aes(x = reorder(primitive, -count), y = count)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~ threshold, scales = 'free') +
+  xlab('Label') +
+  ylab('Count')
+```
+
 
 
 
